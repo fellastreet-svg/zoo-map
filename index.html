@@ -6,15 +6,15 @@
         body { 
             margin: 0; 
             padding: 0; 
-            overflow: scroll; /* Allows the map to move when scrolled by code */
+            overflow: scroll; 
             background: #f0f0f0;
             display: flex;
             justify-content: center;
         }
         #mapImage { 
-            transition: transform 0.2s ease; /* Makes zooming look smooth */
+            transition: transform 0.2s ease; 
             transform-origin: center;
-            width: 100vw; 
+            width: 200vw; /* Set larger than screen so it can pan */
             height: auto;
         }
     </style>
@@ -28,7 +28,7 @@
         window.addEventListener('message', function(event) {
             let map = document.getElementById('mapImage');
             
-            // ZOOM LOGIC
+            // ZOOM CONTROLS
             if (event.data === 'zoom_in') {
                 currentZoom += 0.2;
                 map.style.transform = `scale(${currentZoom})`;
@@ -38,12 +38,17 @@
                 map.style.transform = `scale(${currentZoom})`;
             }
 
-            // PANNING (MOVEMENT) LOGIC
-            // Note: window.scrollBy(X pixels, Y pixels)
-            if (event.data === 'move_up')    { window.scrollBy(0, -100); }
-            if (event.data === 'move_down')  { window.scrollBy(0, 100); }
-            if (event.data === 'move_left')  { window.scrollBy(-100, 0); }
-            if (event.data === 'move_right') { window.scrollBy(100, 0); }
+            // DIRECTIONAL MOVEMENT (X, Y)
+            if (event.data === 'move_up')          { window.scrollBy(0, -100); }
+            if (event.data === 'move_down')        { window.scrollBy(0, 100); }
+            if (event.data === 'move_left')        { window.scrollBy(-100, 0); }
+            if (event.data === 'move_right')       { window.scrollBy(100, 0); }
+            
+            // CORNER MOVEMENT
+            if (event.data === 'move_topleft')     { window.scrollBy(-100, -100); }
+            if (event.data === 'move_topright')    { window.scrollBy(100, -100); }
+            if (event.data === 'move_bottomleft')  { window.scrollBy(-100, 100); }
+            if (event.data === 'move_bottomright') { window.scrollBy(100, 100); }
         });
     </script>
 </body>
