@@ -1,13 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { margin: 0; overflow: hidden; background: #eee; }
-        img { width: 100vw; height: auto; display: block; }
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: scroll; /* Allows the map to move when scrolled by code */
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+        }
+        #mapImage { 
+            transition: transform 0.2s ease; /* Makes zooming look smooth */
+            transform-origin: center;
+            width: 100vw; 
+            height: auto;
+        }
     </style>
 </head>
 <body>
-    <img src="download.png">
+    <img id="mapImage" src="download.png">
+
+    <script>
+        let currentZoom = 1;
+
+        window.addEventListener('message', function(event) {
+            let map = document.getElementById('mapImage');
+            
+            // ZOOM LOGIC
+            if (event.data === 'zoom_in') {
+                currentZoom += 0.2;
+                map.style.transform = `scale(${currentZoom})`;
+            }
+            if (event.data === 'zoom_out' && currentZoom > 0.5) {
+                currentZoom -= 0.2;
+                map.style.transform = `scale(${currentZoom})`;
+            }
+
+            // PANNING (MOVEMENT) LOGIC
+            // Note: window.scrollBy(X pixels, Y pixels)
+            if (event.data === 'move_up')    { window.scrollBy(0, -100); }
+            if (event.data === 'move_down')  { window.scrollBy(0, 100); }
+            if (event.data === 'move_left')  { window.scrollBy(-100, 0); }
+            if (event.data === 'move_right') { window.scrollBy(100, 0); }
+        });
+    </script>
 </body>
 </html>
